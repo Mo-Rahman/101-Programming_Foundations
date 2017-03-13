@@ -81,6 +81,7 @@ Kernel.puts("£#{monthly_payment.round(2)}")
 # p = loan amount
 # j = monthly interest rate
 # n = loan duration in months 
+# testing git-github
 
 
 
