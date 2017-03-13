@@ -1,93 +1,95 @@
-
-
 # Assignment: Mortgage / Car Loan Calculator
 
-# Take everything you've learned so far and build a mortgage calculator (or car payment calculator -- it's the same thing).
+# START
 
-# You'll need three pieces of information:
-
-# the loan amount
-# the Annual Percentage Rate (APR)
-# the loan duration
-# From the above, you'll need to calculate the following two things:
-
-# monthly interest rate (APR/12 will give you the apr in months)
-# loan duration in months (ask for the loan duration in months! Done!)
-# You can use the following formula:
-
-# Mortgage Calculator Formula
-
-# Translated to Ruby, this is what the formula looks like:
-
-# m = p * (j / (1 - (1 + j)**(-n)))
-# m = monthly payment
-# p = loan amount
-# j = monthly interest rate
-# n = loan duration in months
-# # Finally, don't forget to run your code through Rubocop.
-
-# Hints:
-
-# Figure out what format your inputs need to be in. For example, should the interest rate be expressed as 5 or .05, if you mean 5% interest?
-# # If you're working with Annual Percentage Rate (APR), you'll need to convert that to a monthly interest rate.
-# Be careful about the loan duration -- are you working with months or years? Choose variable names carefully to assist in remembering.
-
-
-# START 
-
-# GET 
+# GET
 # VALIDATE make sure only valid numbers are used and includes floating points
 # SET loan_amount == input
 
 # Ask for the Annual Percentage rate (APR)
-#   - make sure it's a valid number and not jiberish 
+#   - make sure it's a valid number and not jiberish
 
 # Ask for the loan duration in months
-#   - make sure it's a valid number. 
+#   - make sure it's a valid number.
 
 # def valid_number?(number_string)
 #   number_string.to_i.to_s == number_string && number_string.to_i != 0
 # end
 
-
 # the loan amount
 # the Annual Percentage Rate (APR)
 # the loan duration
 
-Kernel.puts("Welcome to our mortage calculator")
+def prompt(message)
+  Kernel.puts("=> #{message}")
+end
 
-Kernel.puts("Please Enter your loan amount")
-loan_amount = Kernel.gets().chomp()
+def integer?(input)
+  input.to_i.to_s == input && input.to_i > 0
+end
 
-Kernel.puts(loan_amount)
+def float?(input)
+  input.to_f.to_s == input && input.to_f > 0
+end
 
-Kernel.puts("Please enter your Annual Percentage Rate (APR)")
-apr = Kernel.gets().chomp
+def valid_number?(num)
+  integer?(num) || float?(num)
+end
 
-Kernel.puts("Please enter your loan duration in years")
-duration_in_years = Kernel.gets().chomp()
+loop do
+  prompt("Welcome to our mortage calculator")
+  prompt("=================================")
 
-monthly_interest_rate = apr.to_f / 100 / 12 
+  loan_amount = ''
+  loop do
+    prompt("Please Enter your loan amount")
+    loan_amount = Kernel.gets().chomp()
 
-duration_in_months = duration_in_years.to_i * 12
+    if valid_number?(loan_amount)
+      break
+    else
+      prompt("Please enter a valid number")
+    end
+  end
 
-monthly_payment = loan_amount.to_f * (monthly_interest_rate / (1 - (1 + monthly_interest_rate)**(-duration_in_months)))
+  apr = ''
+  loop do
+    prompt("Please enter your Annual Percentage Rate (APR)")
+    prompt("5% as 5, 7.5% as 7.5 etc")
+    apr = Kernel.gets().chomp
 
-Kernel.puts("£#{monthly_payment.round(2)}")
+    if valid_number?(apr)
+      break
+    else
+      prompt("Please enter a valid number")
+    end
+  end
 
-# m = p * (j / (1 - (1 + j)**(-n)))
+  duration_in_years = ''
+  loop do
+    prompt("Please enter your loan duration in years")
+    duration_in_years = Kernel.gets().chomp()
 
-# m = monthly payment
-# p = loan amount
-# j = monthly interest rate
-# n = loan duration in months 
-# testing git-github
+    if valid_number?(duration_in_years)
+      break
+    else
+      prompt("Please enter a valid duration")
+    end
+  end
 
+  monthly_interest_rate = (apr.to_f / 100) / 12
 
+  duration_in_months = duration_in_years.to_i * 12
 
+  monthly_payment = loan_amount.to_f * (monthly_interest_rate /
+                    (1 - (1 + monthly_interest_rate)**-duration_in_months))
 
+  Kernel.puts("£#{monthly_payment.round(2)}")
 
+  prompt("Do you want to perform another calculation? (Y to calculate again)")
+  prompt("If you would like to exit, press any other key!")
+  answer = Kernel.gets().chomp()
+  break unless answer.downcase.start_with?("y")
+end
 
-
-
-
+prompt("Thank you for using our mortgage loan calculator!")
