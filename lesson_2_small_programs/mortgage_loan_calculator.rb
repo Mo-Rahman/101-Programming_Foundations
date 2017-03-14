@@ -37,7 +37,7 @@ def valid_number?(num)
 end
 
 loop do
-  prompt("Welcome to our mortage calculator")
+  prompt("Welcome to the mortage calculator")
   prompt("=================================")
 
   loan_amount = ''
@@ -79,17 +79,21 @@ loop do
 
   monthly_interest_rate = (apr.to_f / 100) / 12
 
-  duration_in_months = duration_in_years.to_i * 12
+  duration_in_months = duration_in_years.to_f * 12
 
   monthly_payment = loan_amount.to_f * (monthly_interest_rate /
                     (1 - (1 + monthly_interest_rate)**-duration_in_months))
 
-  Kernel.puts("£#{monthly_payment.round(2)}")
+  prompt("=========================================================")
+  prompt("Your monthly payment will be £#{monthly_payment.round(2)}")
+  prompt("over #{duration_in_months.round(2)} months!")
+  prompt("=========================================================")
 
   prompt("Do you want to perform another calculation? (Y to calculate again)")
   prompt("If you would like to exit, press any other key!")
+  prompt("=========================================================")
   answer = Kernel.gets().chomp()
   break unless answer.downcase.start_with?("y")
 end
 
-prompt("Thank you for using our mortgage loan calculator!")
+prompt("Thank you for using the mortgage loan calculator!")
