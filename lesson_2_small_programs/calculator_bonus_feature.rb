@@ -141,4 +141,4 @@ loop do # main loop
   break unless answer.downcase().start_with?('y')
 end
 
-prompt(MESSAGES["thank_you"])
+prompt(messages('thank_you', LANGUAGE))
