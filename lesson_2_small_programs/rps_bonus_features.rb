@@ -19,8 +19,8 @@ require 'pry'
 # did bonus #1, you'll have two words that starts with "s". How do you
 # resolve that?
 
-# 3. Keep score of how many times the player or computer has won. Make it so 
-# that whoever reaches 5 points first wins. Note: you might be tempted to just 
+# 3. Keep score of how many times the player or computer has won. Make it so
+# that whoever reaches 5 points first wins. Note: you might be tempted to just
 # add some incrementing logic to the display_results method. Don't do this.
 # Remember to keep your methods simple and that they should only do one thing.
 
@@ -58,16 +58,7 @@ def display_results(player, computer)
   end
 end
 
-# def display_results(result)
-#   if result == 'User wins!'
-#     user_score += 1
-#   elsif result == 'Computer wins!'
-#     computer_score += 1
-#   else
-#     user_score += 1 && computer_score += 1
-#   end
-# end
-
+# tried moving the counting of the score into a method
 # def count_score(result)
 #   if result == 'User wins!'
 #       user_score += 1
@@ -86,8 +77,7 @@ prompt('If you want to exit before either you or the computer wins press')
 prompt('ctrl + c')
 prompt('=====================================================================')
 
-
-loop do 
+loop do
   user_score = 0
   computer_score = 0
   loop do
@@ -110,17 +100,18 @@ loop do
         prompt("'#{user_choice}' isn't a valid choice")
       end
     end
-    computer_choice = VALID_CHOICES[VALID_CHOICES.keys.sample]
+    computer_choice = VALID_CHOICES.keys.sample
     prompt("You chose: #{VALID_CHOICES[user_choice]} and the computer
-     chose: #{computer_choice}")
+     chose: #{VALID_CHOICES[computer_choice]}")
 
-    result = display_results(VALID_CHOICES[user_choice], computer_choice)
-    # binding.pry
+    result = display_results(VALID_CHOICES[user_choice],
+                             VALID_CHOICES[computer_choice])
+
     # count_score(result)
     if result == 'User wins!'
-        user_score += 1
+      user_score += 1
     elsif result == 'Computer wins!'
-        computer_score += 1
+      computer_score += 1
     end
 
     prompt("User_score is: #{user_score} Computer_score is: #{computer_score}")
@@ -133,7 +124,6 @@ loop do
   answer = Kernel.gets().chomp()
   break unless answer.downcase.start_with?('y')
 end
-
 
 prompt("Thank you for playing rock, paper scissors, lizard, spock!")
 prompt("Good bye!")
