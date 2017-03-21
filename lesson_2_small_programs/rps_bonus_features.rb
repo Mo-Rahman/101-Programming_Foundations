@@ -58,7 +58,7 @@ def display_results(player, computer)
   end
 end
 
-# tried moving the counting of the score into a method
+# Tried moving the counting of the score into a method
 # def count_score(result)
 #   if result == 'User wins!'
 #       user_score += 1
