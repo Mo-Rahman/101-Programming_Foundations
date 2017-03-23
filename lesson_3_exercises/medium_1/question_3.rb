@@ -24,7 +24,7 @@
 def factors(number)
   dividend = number # pointers.
   divisors = []
-  while dividend > 0 # dividend starts at 10 for the first loop and 9 for the second
+  while dividend > 0 do # dividend starts at 10 for the first loop and 9 for the second
     divisors << (number / dividend) if number % dividend == 0 # number is always 10
     dividend -= 1 
   end
