@@ -21,7 +21,7 @@ puts "My array looks like this now: #{my_array}"
 # the tricky_method will return => ["pumpkins", "rutabaga"] this is 
 # because it's the last line in the method. 
 
-# my_string will look like ="pumpkins" as the assignment method isn't destructive, 
+# my_string will look like ="pumpkins" as the re-assignment isn't destructive, 
 # therefore the argument "my_string" that was passed in works as pass by value.  
 
 # The << is a destructive method and it mutates the argument passed in, therefore
