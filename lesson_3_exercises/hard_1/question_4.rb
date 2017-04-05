@@ -34,7 +34,7 @@ def dot_separated_ip_address?(input_string)
   true
 end
 
-random = dot_separated_ip_address?("1.4.6.4")
+# random = dot_separated_ip_address?("1.4.6.4")   
 
 puts random
 
