@@ -10,7 +10,7 @@ end
 
 def display_board(brd)
   system 'clear'
-  puts "User is X, Computer is O"
+  puts "You're a #{PLAYER_MARKER}, Computer is #{COMPUTER_MARKER}"
   puts ""
   puts "     |     |"
   puts "  #{brd[1]}  |  #{brd[2]}  |  #{brd[3]}"
@@ -91,30 +91,32 @@ def detect_winner(brd)
   nil
 end
 
-board = initialize_board
 
-loop do 
-  display_board(board) # displays the initial empty board
+loop do
+  board = initialize_board
 
-  player_places_piece!(board)
-  break if someone_won?(board) || board_full?(board)
+  loop do 
+    display_board(board) # displays the initial empty board
 
-  computer_places_piece!(board)
-  break if someone_won?(board) || board_full?(board)
+    player_places_piece!(board)
+    break if someone_won?(board) || board_full?(board)
+
+    computer_places_piece!(board)
+    break if someone_won?(board) || board_full?(board)
+  end
+    
+  display_board(board)  # displays the board after user & computer choice's
+
+  if someone_won?(board)
+    prompt "#{detect_winner(board)} won"
+  else
+    prompt "It's a tie!"
+  end
+
+  # display_board(board)  # This is redundant? As the display board in the loop
+  # is essentially showing the final board
+  puts "Would you like to play again? (y or n)"
+  answer = gets.chomp
+  break unless answer.downcase.start_with?('y')
 end
-  
-display_board(board)  # displays the board after user & computer choice's
-
-if someone_won?(board)
-  prompt "#{detect_winner(board)} won"
-else
-  prompt "It's a tie!"
-end
-
-# display_board(board)  # This is redundant? As the display board in the loop
-# is essentially showing the final board
-
-
-
-
 
