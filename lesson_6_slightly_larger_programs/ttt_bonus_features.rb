@@ -3,13 +3,16 @@ require 'pry'
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
+WINNING_LINES = [[1,2,3], [4,5,6], [7,8,9]] +  # rows
+                [[1,4,7], [2,5,8], [3,6,9]] +  # column
+                [[1,5,9], [3,5,7]]             # diagonals
 
 def prompt(msg)
   puts "=> #{msg}"
 end
 
-def display_board(brd)
-  system 'clear'
+def display_board(brd, player_score, computer_score)
+  system 'clear' || 'cls'
   prompt '====================================================================='
   prompt 'Naughts and Crosses or Tic tac toe' 
   prompt 'This games a battle to 5 points between yourself and the computer' 
@@ -17,6 +20,7 @@ def display_board(brd)
   prompt 'ctrl + c' 
   prompt '=====================================================================' 
   puts "You're a #{PLAYER_MARKER}, Computer is #{COMPUTER_MARKER}"
+  puts "Your score is: #{player_score}, Computer score is: #{computer_score}"
   puts ""
   puts "     |     |"
   puts "  #{brd[1]}  |  #{brd[2]}  |  #{brd[3]}"
@@ -37,17 +41,6 @@ def initialize_board
   (1..9).each { |num| new_board[num] = INITIAL_MARKER }
   new_board
 end
-
-# prompt "Please mark a square from 1 to 9"
-# user_input = gets.chomp.to_i
-# loop do 
-#   if (1..9).include?(user_input)
-#     break
-#   else
-#     puts "Please mark a square from 1 to 9"
-#     user_input = gets.chomp.to_i
-#   end
-# end
 
 def empty_squares(brd)
   brd.keys.select { |num| brd[num] == INITIAL_MARKER }
@@ -98,10 +91,49 @@ def player_places_piece!(brd)
   brd[square] = PLAYER_MARKER
 end
 
+# def computer_places_piece!(brd)
+#   square = empty_squares(brd).sample
+#   brd[square] = COMPUTER_MARKER
+# end
+
 def computer_places_piece!(brd)
-  square = empty_squares(brd).sample
+  square = nil
+  WINNING_LINES.each do |line|
+    square = find_at_risk_square(brd, line)
+    break if square
+  end
+      
+  if !square
+    square = empty_squares(brd).sample
+  end
+
   brd[square] = COMPUTER_MARKER
 end
+
+# I know that at the moment the computer places a piece randomly from what is 
+# available from the emptry square's list
+
+# I need a way of getting the computer to mark the 3rd square of a line - when 
+# 2 squares of the line have been marked by the player. If there is no threat, 
+# randomly place a piece from the available squares. 
+
+def find_at_risk_square(brd, line)
+  if brd.values_at(*line).count(PLAYER_MARKER) == 2
+    brd.select do |k, v|
+      line.include?(k) && v == INITIAL_MARKER
+    end.keys.first
+  else
+    nil
+  end
+end
+
+# def find_at_risk_square(line, board)
+#   if board.values_at(*line).count('X') == 2
+#     board.select{|k,v| line.include?(k) && v == ' '}.keys.first
+#   else
+#     nil
+#   end
+# end
 
 def board_full?(brd)
   empty_squares(brd).empty?
@@ -111,12 +143,8 @@ def someone_won?(brd)
   !!detect_winner(brd)
 end
 
-def detect_winner(brd)
-  winning_lines = [[1,2,3], [4,5,6], [7,8,9]] +  # rows
-                  [[1,4,7], [2,5,8], [3,6,9]] +  # column
-                  [[1,5,9], [3,5,7]]             # diagonals
-
-  winning_lines.each do |line|
+def detect_winner(brd) 
+  WINNING_LINES.each do |line|
     if brd[line[0]] == PLAYER_MARKER && 
       brd[line[1]] == PLAYER_MARKER && 
       brd[line[2]] == PLAYER_MARKER
@@ -131,89 +159,47 @@ def detect_winner(brd)
   nil
 end
 
+
 loop do
   board = initialize_board # displays the initial empty board
-
+  player_score = 0
+  computer_score = 0
   loop do 
-    display_board(board) 
+    loop do 
+    display_board(board, player_score, computer_score) 
 
     player_places_piece!(board)
     break if someone_won?(board) || board_full?(board)
 
     computer_places_piece!(board)
     break if someone_won?(board) || board_full?(board)
-  end
+    end
     
-  display_board(board)  # displays the board after user & computer choice's
+    display_board(board, player_score, computer_score)
 
-  if someone_won?(board)
-    prompt "#{detect_winner(board)} won"
-  else
-    prompt "It's a tie!"
+    if someone_won?(board)
+      prompt "#{detect_winner(board)} won"
+    else
+      prompt "It's a tie!"
+    end
+    
+    # count score
+
+    if detect_winner(board) == "Player"
+      player_score += 1
+    elsif detect_winner(board) == "Computer"
+      computer_score += 1
+    end
+
+    break if player_score == 5 || computer_score == 5
+    board = initialize_board
   end
 
+    display_board(board, player_score, computer_score)
+  
   # display_board(board)  # This is redundant? As the display board in the loop
   # is essentially showing the final board
   puts "Would you like to play again? (y or n)"
   answer = gets.chomp
   break unless answer.downcase.start_with?('y')
 end
-
-
-# loop do
-#   user_score = 0
-#   computer_score = 0
-#   loop do
-#     user_choice = ''
-#     loop do
-#       please_choose = <<~MSG
-#       Please choose:
-#       r for rock
-#       p for paper
-#       sc for scissors
-#       l for lizard
-#       sp for spock
-#       MSG
-#       prompt(please_choose)
-#       user_choice = Kernel.gets().chomp().to_sym.downcase
-
-#       if VALID_CHOICES.key?(user_choice)
-#         break
-#       else
-#         prompt("'#{user_choice}' isn't a valid choice")
-#       end
-#     end
-#     computer_choice = VALID_CHOICES.keys.sample
-#     prompt("You chose: #{VALID_CHOICES[user_choice]} and the computer
-#      chose: #{VALID_CHOICES[computer_choice]}")
-
-#     result = display_results(VALID_CHOICES[user_choice],
-#                              VALID_CHOICES[computer_choice])
-
-#     # count_score(result)
-#     if result == 'User wins!'
-#       user_score += 1
-#     elsif result == 'Computer wins!'
-#       computer_score += 1
-#     end
-
-#     prompt("User_score is: #{user_score} Computer_score is: #{computer_score}")
-#     # prompt(computer_score)
-#     break if computer_score == 5 || user_score == 5
-#   end
-
-#   prompt("Would you like to play again? ('y' to play again)")
-#   prompt("If you would like to exit, press any other key!")
-#   answer = Kernel.gets().chomp()
-#   break unless answer.downcase.start_with?('y')
-# end
-
-# prompt("Thank you for playing rock, paper scissors, lizard, spock!")
-# prompt("Good bye!")
-
-
-
-
-
-
-
