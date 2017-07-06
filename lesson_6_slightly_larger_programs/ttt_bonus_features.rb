@@ -1,3 +1,5 @@
+# TODO = EXERCISE 5
+
 require 'pry'
 
 INITIAL_MARKER = ' '
@@ -98,9 +100,21 @@ end
 
 def computer_places_piece!(brd)
   square = nil
+
+  # offence
+
   WINNING_LINES.each do |line|
-    square = find_at_risk_square(brd, line)
+    square = find_at_risk_square(brd, line, COMPUTER_MARKER)
     break if square
+  end
+
+  # defence
+
+  if !square
+    WINNING_LINES.each do |line|
+      square = find_at_risk_square(brd, line, PLAYER_MARKER)
+      break if square
+    end
   end
       
   if !square
@@ -117,8 +131,24 @@ end
 # 2 squares of the line have been marked by the player. If there is no threat, 
 # randomly place a piece from the available squares. 
 
-def find_at_risk_square(brd, line)
-  if brd.values_at(*line).count(PLAYER_MARKER) == 2
+# my solution within the find_at_risk_square
+
+# def find_at_risk_square(brd, line)
+#   if brd.values_at(*line).count(PLAYER_MARKER) == 2
+#     brd.select do |k, v|
+#       line.include?(k) && v == INITIAL_MARKER
+#     end.keys.first
+#   elsif brd.values_at(*line).count(COMPUTER_MARKER) == 2
+#     brd.select do |k, v|
+#       line.include?(k) && v == INITIAL_MARKER
+#     end.keys.first
+#   else
+#     nil
+#   end
+# end
+
+def find_at_risk_square(brd, line, marker)
+  if brd.values_at(*line).count(marker) == 2
     brd.select do |k, v|
       line.include?(k) && v == INITIAL_MARKER
     end.keys.first
@@ -145,13 +175,13 @@ end
 
 def detect_winner(brd) 
   WINNING_LINES.each do |line|
-    if brd[line[0]] == PLAYER_MARKER && 
-      brd[line[1]] == PLAYER_MARKER && 
-      brd[line[2]] == PLAYER_MARKER
+    if brd.values_at(*line).count(PLAYER_MARKER) == 3 #&& 
+      # brd[line[1]] == PLAYER_MARKER && 
+      # brd[line[2]] == PLAYER_MARKER
       return "Player"
-    elsif brd[line[0]] == COMPUTER_MARKER && 
-      brd[line[1]] == COMPUTER_MARKER && 
-      brd[line[2]] == COMPUTER_MARKER
+    elsif brd.values_at(*line).count(COMPUTER_MARKER) == 3 #&& 
+      # brd[line[1]] == COMPUTER_MARKER && 
+      # brd[line[2]] == COMPUTER_MARKER
       return "Computer" 
     end
     # binding.pry 
