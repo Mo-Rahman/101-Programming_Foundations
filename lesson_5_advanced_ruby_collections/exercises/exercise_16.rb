@@ -16,3 +16,14 @@
 # Write a method that returns one UUID when called with no parameters.
 
 # Haven't got a scooby doo! 
+
+def generate_uuid 
+  hex = %w(0 1 2 3 4 5 6 7 8 9 a b c d e f)
+  sections = [8, 4, 4, 4, 12]
+  uuid = ''
+  sections.each_with_index do |section, index|
+    section.times { uuid += hex.sample }
+    uuid += '-' unless index >= sections.size - 1
+  end 
+  uuid
+end
